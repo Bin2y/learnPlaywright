@@ -14,11 +14,11 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - name: 코드 가져오기 
-      - uses: actions/checkout@v4
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
 
       - name: 노드 설치
-      - uses: actions/setup-node@v4
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
