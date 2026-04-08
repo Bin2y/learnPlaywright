@@ -5,6 +5,9 @@ blob-report/
 playwright/.cache/
 .playwright-mcp/
 
+# Cursor 에디터 (로컬 규칙·에이전트 설정)
+.cursor/
+
 # 비밀·로컬 설정 (나중에 API 키 등 넣을 때 실수로 올리지 않도록)
 .env
 .env.*
