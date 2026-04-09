@@ -1,12 +1,14 @@
 import { expect, test } from '@playwright/test';
 
 import { NICKNAME_LIST } from './nickname-lookup.data';
+import { waitForAppReady } from './wait-for-app';
 
 //CSV에 적힌 닉네임마다 동일 플로우(캐릭터 정보 + 장착 장비 UI)를 검증
 test.describe('닉네임 및 장비조회', () => {
   for (const nickname of NICKNAME_LIST) {
     test(`닉네임 "${nickname}" 조회`, async ({ page }) => {
       await page.goto('/');
+      await waitForAppReady(page);
 
       //닉네임 입력 후 Enter로 조회 요청
       const input = page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
