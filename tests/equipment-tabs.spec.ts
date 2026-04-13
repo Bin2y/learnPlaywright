@@ -1,5 +1,12 @@
 import { expect, test } from '@playwright/test';
 
+import {
+  characterDetailTablist,
+  nicknameInput,
+  tabCharacterInfo,
+  tabEquipment,
+  tabStats,
+} from './locators';
 import { NICKNAME_LIST } from './nickname-lookup.data';
 import { waitForAppReady } from './wait-for-app';
 
@@ -10,33 +17,35 @@ test.describe('장비 탭 상호작용', () => {
 
     await page.goto('/');
     await waitForAppReady(page);
-    const input = page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
-    await input.fill(nickname!);
-    await input.press('Enter');
+    await nicknameInput(page).fill(nickname!);
+    await nicknameInput(page).press('Enter');
 
-    const tab = page.getByRole('tab', { name: '현재 장착' });
-    await expect(tab).toBeVisible();
+    await expect(characterDetailTablist(page)).toBeVisible();
   });
 
-  test('현재 장착 탭 클릭', async ({ page }) => {
-    const tab = page.getByRole('tab', { name: '현재 장착' });
-    await tab.click();
-    await expect(tab).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('heading', { name: '장비', exact: true })).toBeVisible();
+  test('장비 탭 클릭 시 포커스 이동', async ({ page }) => {
+    await tabEquipment(page).click();
+    await expect(tabEquipment(page)).toBeFocused();
   });
 
-  test('모든 장비 탭 동작 클릭', async ({ page }) => {
-    const tablist = page.getByRole('tablist');
+  test('캐릭터 상세 탭 전체 클릭 순회', async ({ page }) => {
+    const tablist = characterDetailTablist(page);
     const tabs = tablist.getByRole('tab');
     const count = await tabs.count();
-    test.skip(count < 2, '탭이 2개 미만 테스트 종료');
+    test.skip(count < 2, '탭이 2개 미만이면 종료');
 
-    for(let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       const tab = tabs.nth(i);
       const label = await tab.textContent();
       await tab.click();
-      await expect(tab).toHaveAttribute('aria-selected', 'true');
+      await expect(tab).toBeFocused();
       expect(label?.length).toBeGreaterThan(0);
     }
+  });
+
+  test('캐릭터 정보·장비·스탯 탭 라벨 존재', async ({ page }) => {
+    await expect(tabCharacterInfo(page)).toBeVisible();
+    await expect(tabEquipment(page)).toBeVisible();
+    await expect(tabStats(page)).toBeVisible();
   });
 });

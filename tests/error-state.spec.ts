@@ -1,30 +1,29 @@
 import { expect, test } from '@playwright/test';
 
+import { loadErrorAlert, nicknameInput } from './locators';
 import { NICKNAME_LIST } from './nickname-lookup.data';
 import { waitForAppReady } from './wait-for-app';
 
 const INVALID_NICKNAME = '존재하지않는닉네임_xyz_125126161261662423';
 
 test.describe('오류·네거티브 상태', () => {
-  test('존재하지 않는 닉네임 — 캐릭터 정보 미노출', async ({ page }) => {
+  test('존재하지 않는 닉네임 — 로드 실패 alert', async ({ page }) => {
     await page.goto('/');
     await waitForAppReady(page);
 
-    const input = page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
-    await input.fill(INVALID_NICKNAME);
-    await input.press('Enter');
+    await nicknameInput(page).fill(INVALID_NICKNAME);
+    await nicknameInput(page).press('Enter');
 
     await page.waitForLoadState('networkidle');
 
-    //alert가 보여야함
-    await expect(page.getByRole('alert').filter({ hasText: '캐릭터를 찾을 수 없습니다.' })).toBeVisible();
+    await expect(loadErrorAlert(page)).toBeVisible();
   });
 
   test('빈 입력 후 Enter — 닉네임 입력 안내 문구', async ({ page }) => {
     await page.goto('/');
     await waitForAppReady(page);
 
-    const input = page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
+    const input = nicknameInput(page);
     await expect(input).toBeEmpty();
     await input.press('Enter');
 
@@ -35,7 +34,7 @@ test.describe('오류·네거티브 상태', () => {
     await page.goto('/');
     await waitForAppReady(page);
 
-    const input = page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
+    const input = nicknameInput(page);
     const first = NICKNAME_LIST[0];
     test.skip(!first, 'CSV에 닉네임이 없음');
 
