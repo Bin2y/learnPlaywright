@@ -6,7 +6,7 @@ import {
   nicknameInput,
   searchButton,
 } from './locators';
-import { waitForAppReady } from './wait-for-app';
+import { waitForAppReady } from './wait_for_app';
 
 test.describe('초기(Empty) 상태', () => {
   test('페이지 진입 시 조회 전 UI', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('초기(Empty) 상태', () => {
     await expect(input).toBeEditable();
 
     await expect(searchButton(page)).toBeVisible();
-    // 상세 화면(탭·뒤로가기)은 아직 없어야 함
+    //상세 화면(탭 및 뒤로가기)은 아직 없어야 함
     await expect(characterDetailTablist(page)).not.toBeVisible();
     await expect(backToSearchLink(page)).not.toBeVisible();
   });

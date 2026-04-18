@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test';
 
 import { loadErrorAlert, nicknameInput } from './locators';
-import { NICKNAME_LIST } from './nickname-lookup.data';
-import { waitForAppReady } from './wait-for-app';
+import { NICKNAME_LIST } from './nickname_lookup.data';
+import { waitForAppReady } from './wait_for_app';
 
 const INVALID_NICKNAME = '존재하지않는닉네임_xyz_125126161261662423';
 
-test.describe('오류·네거티브 상태', () => {
+test.describe('오류 및 네거티브 상태', () => {
   test('존재하지 않는 닉네임 — 로드 실패 alert', async ({ page }) => {
     await page.goto('/');
     await waitForAppReady(page);

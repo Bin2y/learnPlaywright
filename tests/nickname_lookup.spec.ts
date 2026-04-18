@@ -6,8 +6,8 @@ import {
   nicknameInput,
   tabEquipment,
 } from './locators';
-import { NICKNAME_LIST } from './nickname-lookup.data';
-import { waitForAppReady } from './wait-for-app';
+import { NICKNAME_LIST } from './nickname_lookup.data';
+import { waitForAppReady } from './wait_for_app';
 
 // CSV에 적힌 닉네임마다 동일 플로우(상세 화면 + 장비 탭)를 검증
 test.describe('닉네임 및 장비조회', () => {

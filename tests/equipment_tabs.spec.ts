@@ -7,8 +7,8 @@ import {
   tabEquipment,
   tabStats,
 } from './locators';
-import { NICKNAME_LIST } from './nickname-lookup.data';
-import { waitForAppReady } from './wait-for-app';
+import { NICKNAME_LIST } from './nickname_lookup.data';
+import { waitForAppReady } from './wait_for_app';
 
 test.describe('장비 탭 상호작용', () => {
   test.beforeEach(async ({ page }) => {
