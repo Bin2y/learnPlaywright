@@ -5,6 +5,7 @@ import type { Page } from '@playwright/test';
  * 문구 및 역할이 바뀌면 이 파일만 수정하면 된다.
  */
 
+//닉네임 조회 페이지 로케이터터
 export function nicknameInput(page: Page) {
   return page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
 }
@@ -13,7 +14,7 @@ export function searchButton(page: Page) {
   return page.getByRole('button', { name: '조회' });
 }
 
-//조회 후 상단 탭 영역
+//닉네임 조회 후 상단 탭 영역
 export function characterDetailTablist(page: Page) {
   return page.getByRole('tablist', { name: '캐릭터 상세 정보' });
 }
@@ -40,7 +41,7 @@ export function characterMainHeading(page: Page, nickname: string) {
   return page.getByRole('heading', { level: 1 }).filter({ hasText: nickname });
 }
 
-//API/데이터 오류 시 상세 탭 패널 내 alert
+//API 데이터 오류 시 상세 탭 패널 내 alert
 export function loadErrorAlert(page: Page) {
   return page.getByRole('alert').filter({ hasText: '정보를 불러올 수 없습니다.' });
 }
