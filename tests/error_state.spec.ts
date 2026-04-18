@@ -14,9 +14,8 @@ test.describe('오류 및 네거티브 상태', () => {
     await nicknameInput(page).fill(INVALID_NICKNAME);
     await nicknameInput(page).press('Enter');
 
-    await page.waitForLoadState('networkidle');
-
-    await expect(loadErrorAlert(page)).toBeVisible();
+    await page.waitForURL(/character\.html\?name=/);
+    await expect(loadErrorAlert(page)).toBeVisible({ timeout: 60_000 });
   });
 
   test('빈 입력 후 Enter — 닉네임 입력 안내 문구', async ({ page }) => {

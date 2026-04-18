@@ -3,11 +3,6 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  expect: {
-    toHaveScreenshot: {
-      maxDiffPixelRatio: 0.02,
-    },
-  },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
