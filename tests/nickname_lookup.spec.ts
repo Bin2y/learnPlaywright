@@ -8,8 +8,8 @@ import {
 import { NICKNAME_LIST } from './nickname_lookup.data';
 import { openAnyCharacterDetail } from './smoke_lookup';
 
-// 스모크는 최대 3개 후보에서 성공 1건만 검증해 실행 시간을 고정한다.
-const SMOKE_NICKNAMES = NICKNAME_LIST.slice(0, 3);
+// 스모크는 최대 5개 후보에서 성공 1건만 검증해 실행 시간을 고정한다.
+const SMOKE_NICKNAMES = NICKNAME_LIST.slice(0, 5);
 
 test.describe('@smoke 닉네임 및 장비조회', () => {
   test('대표 닉네임 1건 조회', async ({ page }) => {

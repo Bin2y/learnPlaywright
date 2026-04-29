@@ -34,3 +34,32 @@ export async function openAnyCharacterDetail(
 
   return null;
 }
+
+/**
+ * 이미 확정된 닉네임으로 상세 페이지에 단건 진입한다.
+ * (후보 순회 로직 없이 1회 호출)
+ */
+export async function openCharacterDetailByNickname(
+  page: Page,
+  nickname: string
+): Promise<boolean> {
+  await page.goto('/');
+  await waitForAppReady(page);
+  await nicknameInput(page).fill(nickname);
+  await nicknameInput(page).press('Enter');
+  await page.waitForURL(/character(?:_notFound)?\.html\?name=/, {
+    timeout: 20_000,
+  });
+
+  if (page.url().includes('character_notFound.html')) {
+    return false;
+  }
+
+  const tablist = characterDetailTablist(page);
+  const visible = await tablist.isVisible();
+  if (!visible) {
+    return false;
+  }
+  await expect(tablist).toBeVisible();
+  return true;
+}

@@ -7,16 +7,34 @@ import {
   tabStats,
 } from './locators';
 import { NICKNAME_LIST } from './nickname_lookup.data';
-import { openAnyCharacterDetail } from './smoke_lookup';
+import {
+  openAnyCharacterDetail,
+  openCharacterDetailByNickname,
+} from './smoke_lookup';
 
 test.describe('@smoke 캐릭터 상세 조회 버튼 및 탭 상호작용', () => {
-  //모든 테스트는 캐릭터 상세 진입 후 진행됨됨
+  let resolvedNickname: string | null = null;
+
+  // 후보 중 상세 진입 가능한 닉네임을 1회만 해상한다.
+  test.beforeAll(async ({ browser }) => {
+    const candidates = NICKNAME_LIST.slice(0, 5);
+    if (candidates.length === 0) return;
+
+    const page = await browser.newPage();
+    try {
+      resolvedNickname = await openAnyCharacterDetail(page, candidates);
+    } finally {
+      await page.close();
+    }
+  });
+
+  // 각 테스트는 새 page에서 확정 닉네임으로 단건 진입만 수행한다.
   test.beforeEach(async ({ page }) => {
-    const candidates = NICKNAME_LIST.slice(0, 3);
-    test.skip(candidates.length === 0, 'CSV에 닉네임이 없음');
-    const opened = await openAnyCharacterDetail(page, candidates);
-    test.skip(!opened, '상세 화면을 열 수 있는 닉네임을 찾지 못함(외부 API 변동)');
+    test.skip(!resolvedNickname, '상세 화면을 열 수 있는 닉네임을 찾지 못함(외부 API 변동)');
+    const opened = await openCharacterDetailByNickname(page, resolvedNickname!);
+    test.skip(!opened, '확정 닉네임으로 상세 화면 진입 실패(외부 API 변동)');
     await expect(page).toHaveURL(/\/character\.html(\?|$)/);
+    await expect(characterDetailTablist(page)).toBeVisible();
   });
 
   test('캐릭터 정보 탭 디폴트로 선택되어 있는지 확인', async ({ page }) => {
@@ -33,8 +51,8 @@ test.describe('@smoke 캐릭터 상세 조회 버튼 및 탭 상호작용', () =
       const tab = tabs.nth(i);
       const label = await tab.textContent();
       await tab.click();
-      await page.waitForTimeout(2000);
       await expect(tab).toHaveAttribute('aria-selected', 'true');
+      // 보조 검증: 포커스 이동은 브라우저별 편차가 있어 aria-selected를 우선한다.
       await expect(tab).toBeFocused();
       expect(label?.length).toBeGreaterThan(0);
     }
@@ -44,15 +62,5 @@ test.describe('@smoke 캐릭터 상세 조회 버튼 및 탭 상호작용', () =
     await expect(tabCharacterInfo(page)).toBeVisible();
     await expect(tabEquipment(page)).toBeVisible();
     await expect(tabStats(page)).toBeVisible();
-  });
-});
-test.describe('@UI 캐릭터 상세 조회 페이지', () => {
-  //character.html 페이지에 진입했는지 확인
-  test.beforeEach(async ({ page }) => {
-    const candidates = NICKNAME_LIST.slice(0, 3);
-    test.skip(candidates.length === 0, 'CSV에 닉네임이 없음');
-    const opened = await openAnyCharacterDetail(page, candidates);
-    test.skip(!opened, '상세 화면을 열 수 있는 닉네임을 찾지 못함(외부 API 변동)');
-    await expect(page).toHaveURL(/\/character\.html(\?|$)/);
   });
 });
