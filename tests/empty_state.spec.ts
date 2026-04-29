@@ -8,7 +8,7 @@ import {
 } from './locators';
 import { waitForAppReady } from './wait_for_app';
 
-test.describe('초기(Empty) 상태', () => {
+test.describe('@smoke 초기(Empty) 상태', () => {
   test('페이지 진입 시 조회 전 UI', async ({ page }) => {
     await page.goto('/');
     await waitForAppReady(page);
