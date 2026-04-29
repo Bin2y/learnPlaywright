@@ -46,6 +46,16 @@ export function loadErrorAlert(page: Page) {
   return page.getByRole('alert').filter({ hasText: '정보를 불러올 수 없습니다.' });
 }
 
+//닉네임 경계값 테스트시 토스트 알림
+export function nicknameToastAlert(page: Page) {
+  return page.locator('#appToast');
+}
+
+// invalid nickname 또는 rate limit 시 notFound 화면
+export function notFoundHeading(page: Page) {
+  return page.getByRole('heading', { name: '캐릭터 닉네임을 찾을 수 없어요' })
+}
+
 export function backToSearchLink(page: Page) {
   return page.getByRole('link', { name: /다른 캐릭터 조회/ });
 }

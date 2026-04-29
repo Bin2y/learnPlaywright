@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { loadErrorAlert, nicknameInput } from './locators';
+import { loadErrorAlert, nicknameInput, notFoundHeading } from './locators';
 import { waitForAppReady } from './wait_for_app';
 
 /**
@@ -26,9 +26,13 @@ test.describe('네트워크 모킹 (외부 API 비의존)', () => {
     await test.step('검색 후 character.html로 이동', async () => {
       await nicknameInput(page).fill('모킹테스트');
       await nicknameInput(page).press('Enter');
-      await page.waitForURL(/character\.html\?name=/);
+      await page.waitForURL(/character(?:_notFound)?\.html\?name=/);
     });
 
+    if (page.url().includes('character_notFound.html')) {
+      await expect(notFoundHeading(page)).toBeVisible();
+      return;
+    }
     await expect(loadErrorAlert(page)).toBeVisible({ timeout: 30_000 });
   });
 });

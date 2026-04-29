@@ -2,24 +2,20 @@ import { expect, test } from '@playwright/test';
 
 import {
   characterDetailTablist,
-  nicknameInput,
   tabCharacterInfo,
   tabEquipment,
   tabStats,
 } from './locators';
 import { NICKNAME_LIST } from './nickname_lookup.data';
-import { waitForAppReady } from './wait_for_app';
+import { openAnyCharacterDetail } from './smoke_lookup';
 
-test.describe('장비 탭 상호작용', () => {
+test.describe('@smoke 장비 탭 상호작용', () => {
+  //모든 테스트는 캐릭터 상세 진입 후 진행됨됨
   test.beforeEach(async ({ page }) => {
-    const nickname = NICKNAME_LIST[0];
-    test.skip(!nickname, 'CSV에 닉네임이 없음');
-
-    await page.goto('/');
-    await waitForAppReady(page);
-    await nicknameInput(page).fill(nickname!);
-    await nicknameInput(page).press('Enter');
-
+    const candidates = NICKNAME_LIST.slice(0, 3);
+    test.skip(candidates.length === 0, 'CSV에 닉네임이 없음');
+    const opened = await openAnyCharacterDetail(page, candidates);
+    test.skip(!opened, '상세 화면을 열 수 있는 닉네임을 찾지 못함(외부 API 변동)');
     await expect(characterDetailTablist(page)).toBeVisible();
   });
 
