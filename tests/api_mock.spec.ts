@@ -1,7 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
-import { loadErrorAlert, nicknameInput, notFoundHeading } from './locators';
-import { waitForAppReady } from './wait_for_app';
+import { CharacterNotFoundPage } from './pages/CharacterNotFoundPage';
+import { CharacterPage } from './pages/CharacterPage';
+import { HomePage } from './pages/HomePage';
 
 /**
  * characterApp.js가 호출하는 동일 출처 API만 고정 응답으로 바꿉니다.
@@ -20,19 +21,20 @@ test.describe('네트워크 모킹 (외부 API 비의존)', () => {
       });
     });
 
-    await page.goto('/');
-    await waitForAppReady(page);
+    const home = new HomePage(page);
+    await home.goto();
+    await home.expectAppReady();
 
     await test.step('검색 후 character.html로 이동', async () => {
-      await nicknameInput(page).fill('모킹테스트');
-      await nicknameInput(page).press('Enter');
+      await home.searchFromLandingByEnter('모킹테스트');
       await page.waitForURL(/character(?:_notFound)?\.html\?name=/);
     });
 
     if (page.url().includes('character_notFound.html')) {
-      await expect(notFoundHeading(page)).toBeVisible();
+      await new CharacterNotFoundPage(page).expectNotFoundUi();
       return;
     }
-    await expect(loadErrorAlert(page)).toBeVisible({ timeout: 30_000 });
+
+    await new CharacterPage(page).expectLoadErrorAlert({ timeout: 30_000 });
   });
 });

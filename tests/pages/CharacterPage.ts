@@ -76,7 +76,7 @@ export class CharacterPage {
     if (this.page.url().includes('character_notFound.html')) {
       return false;
     }
-    return this.detailTablist.isVisible();
+    return await this.detailTablist.isVisible();
   }
 
   async expectLoaded(nickname: string): Promise<this> {
@@ -203,6 +203,16 @@ export class CharacterPage {
     for (const groupName of ['공격 / 마력', '기본 스탯', '데미지', '크리티컬', '방어 / 기타', '이동', '포스']) {
       await expect(this.statGroup(groupName), `${groupName} 스탯 그룹이 보여야 한다`).toBeVisible();
     }
+    return this;
+  }
+
+  /** API·검증 오류로 상세 데이터를 못 불러온 경우의 alert */
+  async expectLoadErrorAlert(options?: { timeout?: number }): Promise<this> {
+    const timeout = options?.timeout ?? 60_000;
+    await expect(
+      this.page.getByRole('alert').filter({ hasText: '정보를 불러올 수 없습니다.' }),
+      '로드 실패 시 안내 alert가 보여야 한다'
+    ).toBeVisible({ timeout });
     return this;
   }
 

@@ -12,6 +12,8 @@ export default defineConfig({
       process.env.PLAYWRIGHT_BASE_URL ??
       'https://learn-with-maplestory-api.onrender.com',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   // 로컬에서 앱을 직접 띄울 때만: PLAYWRIGHT_WEB_SERVER_COMMAND="npm run dev" 등
   ...(process.env.PLAYWRIGHT_WEB_SERVER_COMMAND

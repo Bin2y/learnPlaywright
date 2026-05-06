@@ -19,16 +19,41 @@ export class AppHeader {
     return this.banner.getByRole('link', { name: '유니온' });
   }
 
+  /** 앱은 라벨을 `다크 모드` / `라이트 모드` 등으로 노출한다. */
   private get themeToggleButton() {
-    return this.banner.getByRole('button', { name: '테마 전환' });
+    return this.banner.getByRole('button', { name: /다크 모드|라이트 모드|테마 전환/ });
   }
 
+  private get characterNavLink() {
+    return this.banner.getByRole('link', { name: '캐릭터', exact: true });
+  }
+
+  /** 랜딩 등 유니온 네비가 없는 화면 */
+  async expectLandingHeaderVisible(): Promise<this> {
+    console.log('[AppHeader] 랜딩 헤더 표시 확인');
+    await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
+    return this;
+  }
+
+  /** 캐릭터 상세 등 유니온 링크가 있는 화면 */
   async expectHeaderVisible(): Promise<this> {
     console.log('[AppHeader] 공통 헤더 표시 확인');
     await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
     await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
     await expect(this.unionLink, '유니온 링크가 보여야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 전환 버튼이 보여야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
+    return this;
+  }
+
+  /** 유니온 페이지 — 상단은 `캐릭터` 링크로 돌아간다. */
+  async expectUnionContextHeaderVisible(): Promise<this> {
+    console.log('[AppHeader] 유니온 컨텍스트 헤더 표시 확인');
+    await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
+    await expect(this.characterNavLink, '캐릭터 링크가 보여야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
     return this;
   }
 
@@ -40,21 +65,4 @@ export class AppHeader {
     return this;
   }
 
-  async goHome(): Promise<this> {
-    console.log('[AppHeader] 홈으로 이동');
-    await this.homeLink.click();
-    return this;
-  }
-
-  async goUnion(): Promise<this> {
-    console.log('[AppHeader] 유니온 페이지로 이동');
-    await this.unionLink.click();
-    return this;
-  }
-
-  async toggleTheme(): Promise<this> {
-    console.log('[AppHeader] 테마 전환');
-    await this.themeToggleButton.click();
-    return this;
-  }
 }

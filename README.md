@@ -61,7 +61,7 @@ npm run report
 ## 테스트 설계 메모
 
 - **로케이터**: `getByRole` 위주로 잡아 접근성 이름과 연동하고, UI 문구 변경 시 실패 위치를 좁히기 쉽게 했습니다.
-- **초기 로딩**: Render 등 콜드 스타트를 위해 [`tests/wait_for_app.ts`](./tests/wait_for_app.ts)에서 닉네임 입력란이 보일 때까지 긴 타임아웃으로 대기합니다.
+- **초기 로딩**: Render 등 콜드 스타트를 위해 [`tests/pages/HomePage.ts`](./tests/pages/HomePage.ts)의 `expectAppReady()`에서 닉네임 입력란이 보일 때까지 긴 타임아웃으로 대기합니다.
 - **실데이터 한계**: 닉네임별 시나리오는 넥슨 Open API와 배포 서버에 의존하므로, **외부 요인으로 간헐 실패**할 수 있습니다.
 - **보완**: `page.route`로 `/api/ocid` 응답을 고정한 테스트([`tests/api_mock.spec.ts`](./tests/api_mock.spec.ts))는 외부 API와 무관하게 **오류 UI(alert 문구)** 계약만 검증합니다.
 
