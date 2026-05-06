@@ -1,26 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
-import {
-  backToSearchLink,
-  characterDetailTablist,
-  nicknameInput,
-  searchButton,
-} from './locators';
-import { waitForAppReady } from './wait_for_app';
+import { HomePage } from './pages/HomePage';
 
 test.describe('@smoke 초기(Empty) 상태', () => {
   test('페이지 진입 시 조회 전 UI', async ({ page }) => {
-    await page.goto('/');
-    await waitForAppReady(page);
+    const home = new HomePage(page);
+    await home.goto();
+    await home.expectAppReady();
 
-    const input = nicknameInput(page);
-    await expect(input).toBeVisible();
-    await expect(input).toBeEmpty();
-    await expect(input).toBeEditable();
-
-    await expect(searchButton(page)).toBeVisible();
-    //상세 화면(탭 및 뒤로가기)은 아직 없어야 함
-    await expect(characterDetailTablist(page)).not.toBeVisible();
-    await expect(backToSearchLink(page)).not.toBeVisible();
+    await test.step('조회 전 랜딩 UI', async () => {
+      await home.expectEmptySearchState();
+      await home.header.expectLandingHeaderVisible();
+    });
   });
 });

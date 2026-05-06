@@ -1,28 +1,8 @@
 import type { Page } from '@playwright/test';
 
 import { CharacterPage } from './pages/CharacterPage';
-
-/**
- * 호스팅 환경에서 닉네임별로 400/429 응답 편차가 있어,
- * 후보를 순회하며 실제 상세 탭이 뜨는 닉네임 하나를 찾는다.
- */
-export async function openAnyCharacterDetail(
-  page: Page,
-  candidates: string[]
-): Promise<string | null> {
-  const characterPage = new CharacterPage(page);
-
-  for (const nickname of candidates) {
-    console.log(`[SmokeLookup] 상세 진입 후보 확인: ${nickname}`);
-    await characterPage.gotoByNickname(nickname);
-    if (await characterPage.isLoaded()) {
-      await characterPage.expectLoaded(nickname);
-      return nickname;
-    }
-  }
-
-  return null;
-}
+import { HomePage } from './pages/HomePage';
+import { UnionPage } from './pages/UnionPage';
 
 export async function openAnyCharacterDetailWithEquipment(
   page: Page,
@@ -52,21 +32,60 @@ export async function openAnyCharacterDetailWithEquipment(
   return null;
 }
 
-/**
- * 이미 확정된 닉네임으로 상세 페이지에 단건 진입한다.
- * (후보 순회 로직 없이 1회 호출)
- */
-export async function openCharacterDetailByNickname(
+/** 랜딩에서 조회해 `character.html`로 진입하는 스모크용 해상 */
+export async function openAnyCharacterDetailFromLanding(
   page: Page,
-  nickname: string
-): Promise<boolean> {
-  console.log(`[SmokeLookup] 확정 닉네임 단건 진입: ${nickname}`);
-  const characterPage = new CharacterPage(page);
-  await characterPage.gotoByNickname(nickname);
-  if (!(await characterPage.isLoaded())) {
-    return false;
+  candidates: string[]
+): Promise<string | null> {
+  const home = new HomePage(page);
+
+  for (const nickname of candidates) {
+    console.log(`[SmokeLookup] 랜딩→상세 후보 확인: ${nickname}`);
+    await home.goto();
+    await home.expectAppReady();
+    await home.searchFromLandingByEnter(nickname);
+    await page.waitForURL(/character(?:_notFound)?\.html\?name=/);
+
+    const characterPage = new CharacterPage(page);
+    if (await characterPage.isLoaded()) {
+      await characterPage.expectLoaded(nickname);
+      return nickname;
+    }
   }
 
-  await characterPage.expectLoaded(nickname);
-  return true;
+  return null;
+}
+
+/** 유니온 페이지에서 기본·아티팩트·챔피언 탭을 모두 검증 가능한 닉네임 해상 */
+export async function openAnyUnionDetailWithTabs(page: Page, candidates: string[]): Promise<string | null> {
+  const unionPage = new UnionPage(page);
+
+  for (const nickname of candidates) {
+    console.log(`[SmokeLookup] 유니온 탭 후보 확인: ${nickname}`);
+    await unionPage.gotoByNickname(nickname);
+    if (!(await unionPage.isLoaded())) {
+      continue;
+    }
+
+    try {
+      await unionPage.expectLoaded(nickname);
+      await unionPage.openArtifactTab();
+      await unionPage.expectArtifactTabReady();
+      await page.waitForResponse(
+        (res) => res.url().includes('/api/character/union-artifact'),
+        { timeout: 120_000 }
+      );
+      await unionPage.openChampionTab();
+      await unionPage.expectChampionTabReady();
+      await page.waitForResponse(
+        (res) => res.url().includes('/api/character/union-champion'),
+        { timeout: 120_000 }
+      );
+      return nickname;
+    } catch {
+      console.log(`[SmokeLookup] union.html 필수 구조 검증 실패 후보 제외: ${nickname}`);
+    }
+  }
+
+  return null;
 }
