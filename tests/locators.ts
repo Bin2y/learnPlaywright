@@ -7,7 +7,7 @@ import type { Page } from '@playwright/test';
 
 //닉네임 조회 페이지 로케이터터
 export function nicknameInput(page: Page) {
-  return page.getByRole('textbox', { name: '캐릭터 닉네임 입력' });
+  return page.getByRole('textbox', { name: '캐릭터 닉네임' });
 }
 
 export function searchButton(page: Page) {

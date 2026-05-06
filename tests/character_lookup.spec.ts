@@ -1,66 +1,97 @@
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 
 import {
-  characterDetailTablist,
-  tabCharacterInfo,
-  tabEquipment,
-  tabStats,
-} from './locators';
+  collectApiResponses,
+  installApiCache,
+  type ApiCache,
+} from './api_cache';
 import { NICKNAME_LIST } from './nickname_lookup.data';
-import {
-  openAnyCharacterDetail,
-  openCharacterDetailByNickname,
-} from './smoke_lookup';
+import { CharacterPage } from './pages/CharacterPage';
+import { openAnyCharacterDetailWithEquipment } from './smoke_lookup';
 
-test.describe('@smoke 캐릭터 상세 조회 버튼 및 탭 상호작용', () => {
+test.describe('@smoke character.html 캐릭터 상세 E2E', () => {
+  test.describe.configure({ mode: 'serial' });
+
+  const apiCache: ApiCache = new Map();
   let resolvedNickname: string | null = null;
 
-  // 후보 중 상세 진입 가능한 닉네임을 1회만 해상한다.
   test.beforeAll(async ({ browser }) => {
     const candidates = NICKNAME_LIST.slice(0, 5);
     if (candidates.length === 0) return;
 
     const page = await browser.newPage();
+    const waitForApiCache = collectApiResponses(page, apiCache);
     try {
-      resolvedNickname = await openAnyCharacterDetail(page, candidates);
+      resolvedNickname = await openAnyCharacterDetailWithEquipment(page, candidates);
+      await waitForApiCache();
     } finally {
       await page.close();
     }
   });
 
-  // 각 테스트는 새 page에서 확정 닉네임으로 단건 진입만 수행한다.
   test.beforeEach(async ({ page }) => {
     test.skip(!resolvedNickname, '상세 화면을 열 수 있는 닉네임을 찾지 못함(외부 API 변동)');
-    const opened = await openCharacterDetailByNickname(page, resolvedNickname!);
-    test.skip(!opened, '확정 닉네임으로 상세 화면 진입 실패(외부 API 변동)');
-    await expect(page).toHaveURL(/\/character\.html(\?|$)/);
-    await expect(characterDetailTablist(page)).toBeVisible();
+
+    const characterPage = new CharacterPage(page);
+    await installApiCache(page, apiCache);
+    await characterPage.gotoByNickname(resolvedNickname!);
+    test.skip(!(await characterPage.isLoaded()), '확정 닉네임으로 상세 화면 진입 실패(외부 API 변동)');
+    await characterPage.expectLoaded(resolvedNickname!);
   });
 
-  test('캐릭터 정보 탭 디폴트로 선택되어 있는지 확인', async ({ page }) => {
-    await expect(tabCharacterInfo(page)).toHaveAttribute('aria-selected', 'true');
+  test('상세 페이지 로드와 기본 탭 상태', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
+
+    await test.step('상세 페이지가 정상 로드되었는지 확인', async () => {
+      await characterPage.expectLoaded(resolvedNickname!);
+    });
   });
 
-  test('캐릭터 상세 탭 전체 클릭 순회', async ({ page }) => {
-    const tablist = characterDetailTablist(page);
-    const tabs = tablist.getByRole('tab');
-    const count = await tabs.count();
-    test.skip(count < 2, '탭이 2개 미만이면 종료');
+  test('상단 액션과 공통 헤더 표시', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
 
-    for (let i = 0; i < count; i++) {
-      const tab = tabs.nth(i);
-      const label = await tab.textContent();
-      await tab.click();
-      await expect(tab).toHaveAttribute('aria-selected', 'true');
-      // 보조 검증: 포커스 이동은 브라우저별 편차가 있어 aria-selected를 우선한다.
-      await expect(tab).toBeFocused();
-      expect(label?.length).toBeGreaterThan(0);
-    }
+    await test.step('헤더와 캐릭터 상단 액션이 표시되는지 확인', async () => {
+      await characterPage.expectHeaderActionsVisible(resolvedNickname!);
+    });
   });
 
-  test('캐릭터 정보·장비·스탯 탭 라벨 존재', async ({ page }) => {
-    await expect(tabCharacterInfo(page)).toBeVisible();
-    await expect(tabEquipment(page)).toBeVisible();
-    await expect(tabStats(page)).toBeVisible();
+  test('캐릭터 정보 탭 핵심 정보', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
+
+    await test.step('캐릭터 정보 탭을 열고 핵심 항목을 확인', async () => {
+      await characterPage.openInfoTab();
+      await characterPage.expectInfoTabReady(resolvedNickname!);
+    });
+  });
+
+  test('장비 탭 구조와 장비 카드', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
+
+    await test.step('장비 탭을 열고 핵심 구조를 확인', async () => {
+      await characterPage.openEquipmentTab();
+      await characterPage.expectEquipmentTabReady();
+    });
+
+    await test.step('첫 번째 장비 카드 상세를 연다', async () => {
+      await characterPage.openFirstEquipmentDetail();
+    });
+  });
+
+  test('장비 검색 입력 유지', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
+
+    await test.step('장비 탭에서 검색어를 입력하고 유지되는지 확인', async () => {
+      await characterPage.openEquipmentTab();
+      await characterPage.searchEquipment('무기');
+    });
+  });
+
+  test('스탯 탭 핵심 그룹', async ({ page }) => {
+    const characterPage = new CharacterPage(page);
+
+    await test.step('스탯 탭을 열고 핵심 그룹을 확인', async () => {
+      await characterPage.openStatsTab();
+      await characterPage.expectStatsTabReady();
+    });
   });
 });
