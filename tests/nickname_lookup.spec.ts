@@ -13,10 +13,9 @@ test.describe('@smoke 닉네임 및 장비조회', () => {
 
     const characterPage = new CharacterPage(page);
 
-    await test.step('상세·장비 탭', async () => {
+    await test.step('랜딩 검색 후 상세 진입', async () => {
       await characterPage.expectLoaded(nickname!);
       await expect(page.getByText(nickname!).first(), '본문에 닉네임이 표시되어야 한다').toBeVisible();
-      await characterPage.openEquipmentTab();
     });
   });
 });

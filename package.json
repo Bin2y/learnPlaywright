@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "test:smoke": "playwright test --grep @smoke",
+    "test:smoke": "playwright test --grep @smoke --project=desktop-chromium",
+    "test:ci-matrix": "playwright test",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report"
   },

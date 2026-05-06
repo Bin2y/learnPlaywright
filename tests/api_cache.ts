@@ -28,12 +28,17 @@ export function collectApiResponses(page: Page, cache: ApiCache): () => Promise<
 
     pending.push(
       (async () => {
-        const body = await response.body();
-        cache.set(response.url(), {
-          status: response.status(),
-          headers: normalizeHeaders(response.headers()),
-          body,
-        });
+        try {
+          const body = await response.body();
+          cache.set(response.url(), {
+            status: response.status(),
+            headers: normalizeHeaders(response.headers()),
+            body,
+          });
+        } catch (err) {
+          // Firefox 등에서 일부 응답 본문 읽기가 실패할 수 있음(NS_ERROR_FAILURE 등)
+          console.log(`[ApiCache] 본문 미수집(캐시 생략): ${response.url()} — ${err}`);
+        }
       })()
     );
   });
