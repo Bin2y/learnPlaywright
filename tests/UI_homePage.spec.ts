@@ -44,6 +44,12 @@ test.describe('@UI 홈페이지 상단 컴포넌트트', () => {
         await home.expectNoticeGroupVisible();
     });
 
+    test('공지사항 토글 버튼 확인', async ({ page }) => {
+        const home = new HomePage(page);
+
+        await home.expectNoticeToggleBtnVisible();
+    });
+
     test('이벤트 목록 노출 확인', async ({ page }) => {
         const home = new HomePage(page);
         await home.expectEventGroupVisible();

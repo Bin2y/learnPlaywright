@@ -64,8 +64,16 @@ export class HomePage {
     return this.page.getByRole('region', { name: '공지사항' });
   }
 
+  private get noticeToggleBtn() {
+    return this.noticeGroup.getByRole('button', { name: '공지사항 토글' });
+  }
+
   private get eventGroup() {
     return this.page.getByRole('region', { name: '이벤트' })
+  }
+
+  private get eventToggleBtn() {
+    return this.eventGroup.getByRole('button', { name: '이벤트 토글' });
   }
 
   private get updateGroup() {
@@ -118,13 +126,24 @@ export class HomePage {
     return this;
   }
 
+  //공지사항, 이벤트, 업데이트 영역역
   async expectNoticeGroupVisible(): Promise<this> {
     await expect(this.noticeGroup, '공지사항 목록이 노출되어야 한다').toBeVisible();
     return this;
   }
 
+  async expectNoticeToggleBtnVisible(): Promise<this> {
+    await expect(this.noticeToggleBtn, '공지사항 토글 버튼이 노출되어야 한다').toBeVisible();
+    return this;
+  }
+
   async expectEventGroupVisible(): Promise<this> {
     await expect(this.eventGroup, '이벤트 목록이 노출되어야 한다').toBeVisible();
+    return this;
+  } 
+
+  async expectEventToggleBtnVisible(): Promise<this> {
+    await expect(this.eventToggleBtn, '이벤트 토글 버튼이 노출되어야 한다').toBeVisible();
     return this;
   }
 

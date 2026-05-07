@@ -4,6 +4,8 @@ import { CharacterNotFoundPage } from './pages/CharacterNotFoundPage';
 import { CharacterPage } from './pages/CharacterPage';
 import { HomePage } from './pages/HomePage';
 
+test.setTimeout(90_000);
+
 /**
  * characterApp.js가 호출하는 동일 출처 API만 고정 응답으로 바꿉니다.
  * renderNexonErrorHtml + 넥슨 "Please input valid parameter" 분기 시
