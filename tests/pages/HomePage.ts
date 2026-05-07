@@ -126,7 +126,7 @@ export class HomePage {
     return this;
   }
 
-  //공지사항, 이벤트, 업데이트 영역역
+  //공지사항, 이벤트, 업데이트 영역
   async expectNoticeGroupVisible(): Promise<this> {
     await expect(this.noticeGroup, '공지사항 목록이 노출되어야 한다').toBeVisible();
     return this;
@@ -151,6 +151,41 @@ export class HomePage {
     await expect(this.updateGroup, '업데이트 목록이 노출되어야 한다').toBeVisible();
     return this;
   }
+
+  //공지사항&이벤트 롤링 확인
+  async expectNoticeTrackMoves(): Promise<this> {
+    const track = this.page.locator('#noticeTrack');
+    await expect(track, '공지사항 롤링 트랙이 보여야 한다').toBeVisible();
+    const before = await track.evaluate((el) => getComputedStyle(el).transform);
+    await expect
+      .poll(
+        async () => track.evaluate((el) => getComputedStyle(el).transform),
+        {
+          timeout: 15_000,
+          intervals: [500, 1000, 1500],
+          message: '공지사항 롤링 트랙 transform 값이 변경되어야 한다',
+        }
+      )
+      .not.toBe(before);
+    return this;
+  }
+  async expectEventTrackMoves(): Promise<this> {
+    const track = this.page.locator('#noticeEventTrack');
+    await expect(track, '이벤트 롤링 트랙이 보여야 한다').toBeVisible();
+    const before = await track.evaluate((el) => getComputedStyle(el).transform);
+    await expect
+      .poll(
+        async () => track.evaluate((el) => getComputedStyle(el).transform),
+        {
+          timeout: 15_000,
+          intervals: [500, 1000, 1500],
+          message: '이벤트 롤링 트랙 transform 값이 변경되어야 한다',
+        }
+      )
+      .not.toBe(before);
+    return this;
+  }
+
 
   async expectEmptySearchState(): Promise<this> {
     console.log('[HomePage] 조회 전 초기 상태 검증');
