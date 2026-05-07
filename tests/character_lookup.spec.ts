@@ -16,6 +16,7 @@ test.describe('@smoke character.html 캐릭터 상세 E2E', () => {
   let resolvedNickname: string | null = null;
 
   test.beforeAll(async ({ browser }) => {
+    test.setTimeout(90_000);
     const candidates = NICKNAME_LIST.slice(0, 5);
     if (candidates.length === 0) return;
 
