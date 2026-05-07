@@ -65,7 +65,7 @@ export class HomePage {
   }
 
   private get noticeToggleBtn() {
-    return this.noticeGroup.getByRole('button', { name: '공지사항 토글' });
+    return this.noticeGroup.getByRole('button', { name: '펼치기' });
   }
 
   private get eventGroup() {
@@ -73,7 +73,7 @@ export class HomePage {
   }
 
   private get eventToggleBtn() {
-    return this.eventGroup.getByRole('button', { name: '이벤트 토글' });
+    return this.eventGroup.getByRole('button', { name: '펼치기' });
   }
 
   private get updateGroup() {
