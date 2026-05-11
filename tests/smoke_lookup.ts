@@ -11,7 +11,7 @@ export async function openAnyCharacterDetailWithEquipment(
   const characterPage = new CharacterPage(page);
 
   for (const nickname of candidates) {
-    console.log(`[SmokeLookup] 장비 탭 가능 후보 확인: ${nickname}`);
+    // console.log(`[SmokeLookup] 장비 탭 가능 후보 확인: ${nickname}`);
     await characterPage.gotoByNickname(nickname);
     if (!(await characterPage.isLoaded())) {
       continue;
@@ -25,7 +25,7 @@ export async function openAnyCharacterDetailWithEquipment(
       await characterPage.expectStatsTabReady();
       return nickname;
     } catch {
-      console.log(`[SmokeLookup] character.html 필수 구조 검증 실패 후보 제외: ${nickname}`);
+      // console.log(`[SmokeLookup] character.html 필수 구조 검증 실패 후보 제외: ${nickname}`);
     }
   }
 
@@ -40,7 +40,7 @@ export async function openAnyCharacterDetailFromLanding(
   const home = new HomePage(page);
 
   for (const nickname of candidates) {
-    console.log(`[SmokeLookup] 랜딩→상세 후보 확인: ${nickname}`);
+    // console.log(`[SmokeLookup] 랜딩→상세 후보 확인: ${nickname}`);
     await home.goto();
     await home.expectAppReady();
     await home.searchFromLandingByEnter(nickname);
@@ -61,7 +61,7 @@ export async function openAnyUnionDetailWithTabs(page: Page, candidates: string[
   const unionPage = new UnionPage(page);
 
   for (const nickname of candidates) {
-    console.log(`[SmokeLookup] 유니온 탭 후보 확인: ${nickname}`);
+    // console.log(`[SmokeLookup] 유니온 탭 후보 확인: ${nickname}`);
     await unionPage.gotoByNickname(nickname);
     if (!(await unionPage.isLoaded())) {
       continue;
@@ -83,7 +83,7 @@ export async function openAnyUnionDetailWithTabs(page: Page, candidates: string[
       );
       return nickname;
     } catch {
-      console.log(`[SmokeLookup] union.html 필수 구조 검증 실패 후보 제외: ${nickname}`);
+      // console.log(`[SmokeLookup] union.html 필수 구조 검증 실패 후보 제외: ${nickname}`);
     }
   }
 

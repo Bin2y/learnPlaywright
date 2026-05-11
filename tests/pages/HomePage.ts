@@ -14,7 +14,7 @@ export class HomePage {
   constructor(private readonly page: Page) {
     this.header = new AppHeader(page);
   }
-//타이틀 컴포넌트트
+//타이틀 컴포넌트
   private get eyebrow() {
     return this.page.getByText('NEXON OPEN API');
   }
@@ -27,7 +27,7 @@ export class HomePage {
     return this.page.getByText('닉네임으로 기본 정보·장비·스탯을 빠르게 확인합니다')
   }
 
-//닉네임 조회 컴포넌트트
+//닉네임 조회 컴포넌트
   private get nicknameField() {
     return this.page.getByRole('textbox', { name: '캐릭터 닉네임' });
   }
@@ -81,7 +81,7 @@ export class HomePage {
   }
 
   async goto(): Promise<this> {
-    console.log('[HomePage] 랜딩 진입');
+    // console.log('[HomePage] 랜딩 진입');
     await this.page.goto('/');
     return this;
   }
@@ -188,7 +188,7 @@ export class HomePage {
 
 
   async expectEmptySearchState(): Promise<this> {
-    console.log('[HomePage] 조회 전 초기 상태 검증');
+    // console.log('[HomePage] 조회 전 초기 상태 검증');
     await expect(this.nicknameField, '닉네임 입력창이 노출되어야 한다').toBeVisible();
     await expect(this.nicknameField, '닉네임 입력창은 비어 있어야 한다').toBeEmpty();
     await expect(this.nicknameField, '닉네임 입력창은 편집 가능해야 한다').toBeEditable();
@@ -215,7 +215,7 @@ export class HomePage {
 
   /** 랜딩에서 닉네임 입력 후 Enter로 조회한다. */
   async searchFromLandingByEnter(nickname: string): Promise<this> {
-    console.log(`[HomePage] 랜딩에서 조회(Enter): ${nickname}`);
+    // console.log(`[HomePage] 랜딩에서 조회(Enter): ${nickname}`);
     await this.fillNickname(nickname);
     await this.submitSearchWithEnter();
     return this;

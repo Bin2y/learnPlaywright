@@ -66,7 +66,7 @@ export class CharacterPage {
   }
 
   async gotoByNickname(nickname: string): Promise<this> {
-    console.log(`[CharacterPage] 캐릭터 상세 직접 진입: ${nickname}`);
+    // console.log(`[CharacterPage] 캐릭터 상세 직접 진입: ${nickname}`);
     await this.page.goto(`/character.html?name=${encodeURIComponent(nickname)}`);
     await this.page.waitForURL(/character(?:_notFound)?\.html\?name=/);
     return this;
@@ -80,7 +80,7 @@ export class CharacterPage {
   }
 
   async expectLoaded(nickname: string): Promise<this> {
-    console.log(`[CharacterPage] 상세 페이지 로드 검증: ${nickname}`);
+    // console.log(`[CharacterPage] 상세 페이지 로드 검증: ${nickname}`);
     await expect(this.page, '캐릭터 상세 페이지 URL이어야 한다').toHaveURL(/\/character\.html\?name=/);
     await expect(this.characterHeading(nickname), '상단 h1에 닉네임이 포함되어야 한다').toBeVisible();
     await expect(
@@ -96,7 +96,7 @@ export class CharacterPage {
   }
 
   async expectHeaderActionsVisible(nickname: string): Promise<this> {
-    console.log('[CharacterPage] 상단 액션 및 링크 검증');
+    // console.log('[CharacterPage] 상단 액션 및 링크 검증');
     await this.header.expectHeaderVisible();
     await this.header.expectUnionLinkFor(nickname);
     await expect(this.backToSearchLink, '다른 캐릭터 조회 링크가 보여야 한다').toBeVisible();
@@ -117,14 +117,14 @@ export class CharacterPage {
   }
 
   async openInfoTab(): Promise<this> {
-    console.log('[CharacterPage] 캐릭터 정보 탭 열기');
+    // console.log('[CharacterPage] 캐릭터 정보 탭 열기');
     await this.infoTab.click();
     await expect(this.infoTab, '캐릭터 정보 탭이 선택되어야 한다').toHaveAttribute('aria-selected', 'true');
     return this;
   }
 
   async openEquipmentTab(): Promise<this> {
-    console.log('[CharacterPage] 장비 탭 열기');
+    // console.log('[CharacterPage] 장비 탭 열기');
     await this.equipmentTab.click();
     if (!(await this.equipmentSearchBox.isVisible())) {
       await this.equipmentTab.press('Enter');
@@ -136,7 +136,7 @@ export class CharacterPage {
   }
 
   async openStatsTab(): Promise<this> {
-    console.log('[CharacterPage] 스탯 탭 열기');
+    // console.log('[CharacterPage] 스탯 탭 열기');
     await this.statsTab.click();
     if (!(await this.page.getByText('전투력', { exact: true }).isVisible())) {
       await this.openEquipmentTab();
@@ -150,7 +150,7 @@ export class CharacterPage {
   }
 
   async expectInfoTabReady(nickname: string): Promise<this> {
-    console.log('[CharacterPage] 캐릭터 정보 탭 내용 검증');
+    // console.log('[CharacterPage] 캐릭터 정보 탭 내용 검증');
     await expect(this.characterImage(nickname), '캐릭터 이미지의 접근성 이름은 닉네임이어야 한다').toBeVisible();
     await expect(this.page.getByRole('heading', { name: '상세 정보' }), '상세 정보 heading이 보여야 한다').toBeVisible();
     for (const label of ['월드', '직업', '성별', '길드', '데이터 기준일']) {
@@ -160,7 +160,7 @@ export class CharacterPage {
   }
 
   async expectEquipmentTabReady(): Promise<this> {
-    console.log('[CharacterPage] 장비 탭 내용 검증');
+    // console.log('[CharacterPage] 장비 탭 내용 검증');
     await expect(this.equipmentSearchBox, '장비 검색창이 보여야 한다').toBeVisible();
     await expect(this.page.getByRole('heading', { name: '칭호' }), '칭호 영역이 보여야 한다').toBeVisible();
     await expect(this.page.getByRole('heading', { name: '장비' }), '장비 heading이 보여야 한다').toBeVisible();
@@ -180,14 +180,14 @@ export class CharacterPage {
   }
 
   async searchEquipment(keyword: string): Promise<this> {
-    console.log(`[CharacterPage] 장비 검색: ${keyword}`);
+    // console.log(`[CharacterPage] 장비 검색: ${keyword}`);
     await this.equipmentSearchBox.fill(keyword);
     await expect(this.equipmentSearchBox, '장비 검색어가 입력창에 유지되어야 한다').toHaveValue(keyword);
     return this;
   }
 
   async openFirstEquipmentDetail(): Promise<this> {
-    console.log('[CharacterPage] 첫 번째 장비 카드 상세 열기');
+    // console.log('[CharacterPage] 첫 번째 장비 카드 상세 열기');
     const firstCard = this.equipmentCards.first();
     await expect(firstCard, '첫 번째 장비 카드가 보여야 한다').toBeVisible();
     await firstCard.click();
@@ -196,7 +196,7 @@ export class CharacterPage {
   }
 
   async expectStatsTabReady(): Promise<this> {
-    console.log('[CharacterPage] 스탯 탭 내용 검증');
+    // console.log('[CharacterPage] 스탯 탭 내용 검증');
     await expect(this.page.getByText('전투력', { exact: true }), '전투력 항목이 보여야 한다').toBeVisible();
     await expect(this.page.getByText('주스탯:'), '주스탯 항목이 보여야 한다').toBeVisible();
 

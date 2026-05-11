@@ -5,7 +5,7 @@ export class CharacterNotFoundPage {
   constructor(private readonly page: Page) {}
 
   async expectNotFoundUi(): Promise<this> {
-    console.log('[CharacterNotFoundPage] 미존재 안내 UI 검증');
+    // console.log('[CharacterNotFoundPage] 미존재 안내 UI 검증');
     await expect(
       this.page.getByRole('heading', { name: '캐릭터 닉네임을 찾을 수 없어요' }),
       '미존재 안내 헤딩이 보여야 한다'
