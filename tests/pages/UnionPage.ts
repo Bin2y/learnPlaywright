@@ -32,7 +32,7 @@ export class UnionPage {
   }
 
   async gotoByNickname(nickname: string): Promise<this> {
-    console.log(`[UnionPage] 유니온 직접 진입: ${nickname}`);
+    // console.log(`[UnionPage] 유니온 직접 진입: ${nickname}`);
     await this.page.goto(`/union.html?name=${encodeURIComponent(nickname)}`);
     await this.page.waitForURL(/union\.html\?name=/);
     return this;
@@ -58,7 +58,7 @@ export class UnionPage {
   }
 
   async expectLoaded(nickname: string): Promise<this> {
-    console.log(`[UnionPage] 로드 검증: ${nickname}`);
+    // console.log(`[UnionPage] 로드 검증: ${nickname}`);
     await expect(this.page, '유니온 페이지 URL이어야 한다').toHaveURL(/\/union\.html\?name=/);
     await this.settleLoadingOverlay();
     await expect(this.characterHeading(nickname), '상단에 닉네임이 포함된 제목이 보여야 한다').toBeVisible();
@@ -83,7 +83,7 @@ export class UnionPage {
   }
 
   async openArtifactTab(): Promise<this> {
-    console.log('[UnionPage] 아티팩트 탭 열기');
+    // console.log('[UnionPage] 아티팩트 탭 열기');
     await this.artifactTab.click();
     await expect(this.artifactTab, '아티팩트 탭이 선택되어야 한다').toHaveAttribute('aria-selected', 'true');
     return this;
@@ -98,7 +98,7 @@ export class UnionPage {
   }
 
   async openChampionTab(): Promise<this> {
-    console.log('[UnionPage] 챔피언 탭 열기');
+    // console.log('[UnionPage] 챔피언 탭 열기');
     await this.championTab.click();
     await expect(this.championTab, '챔피언 탭이 선택되어야 한다').toHaveAttribute('aria-selected', 'true');
     return this;

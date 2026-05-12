@@ -37,7 +37,7 @@ export function collectApiResponses(page: Page, cache: ApiCache): () => Promise<
           });
         } catch (err) {
           // Firefox 등에서 일부 응답 본문 읽기가 실패할 수 있음(NS_ERROR_FAILURE 등)
-          console.log(`[ApiCache] 본문 미수집(캐시 생략): ${response.url()} — ${err}`);
+          // console.log(`[ApiCache] 본문 미수집(캐시 생략): ${response.url()} — ${err}`);
         }
       })()
     );
@@ -52,12 +52,12 @@ export async function installApiCache(page: Page, cache: ApiCache): Promise<void
   await page.route('**/api/**', async (route) => {
     const cached = cache.get(route.request().url());
     if (!cached) {
-      console.log(`[ApiCache] 캐시 없음, 실제 API 요청 허용: ${route.request().url()}`);
+      // console.log(`[ApiCache] 캐시 없음, 실제 API 요청 허용: ${route.request().url()}`);
       await route.continue();
       return;
     }
 
-    console.log(`[ApiCache] 캐시 응답 사용: ${route.request().url()}`);
+    // console.log(`[ApiCache] 캐시 응답 사용: ${route.request().url()}`);
     await route.fulfill({
       status: cached.status,
       headers: cached.headers,
