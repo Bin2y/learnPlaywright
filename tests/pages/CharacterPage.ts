@@ -2,6 +2,8 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import { AppHeader } from './components/AppHeader';
 
+const APP_READY_MS = 120_000;
+
 export class CharacterPage {
   readonly header: AppHeader;
 
@@ -63,6 +65,14 @@ export class CharacterPage {
 
   private characterImage(nickname: string) {
     return this.page.getByRole('img', { name: nickname });
+  }
+
+  async expectAppReady(): Promise<this> {
+    await this.infoTab.waitFor({
+      state: 'visible',
+      timeout: APP_READY_MS,
+    });
+    return this;
   }
 
   async gotoByNickname(nickname: string): Promise<this> {
