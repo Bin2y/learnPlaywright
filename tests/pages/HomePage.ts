@@ -208,8 +208,15 @@ export class HomePage {
     return this;
   }
 
+  //닉네임 필드에서 enter 키 입력력
   async submitSearchWithEnter(): Promise<this> {
     await this.nicknameField.press('Enter');
+    return this;
+  }
+
+  //닉네임 필드에서 조회 버튼 클릭
+  async submitButtonClick(): Promise<this> {
+    await this.searchSubmitButton.click();
     return this;
   }
 
@@ -218,6 +225,12 @@ export class HomePage {
     // console.log(`[HomePage] 랜딩에서 조회(Enter): ${nickname}`);
     await this.fillNickname(nickname);
     await this.submitSearchWithEnter();
+    return this;
+  }
+
+  async searchFromLandingByClick(nickname: string): Promise<this> {
+    await this.fillNickname(nickname);
+    await this.submitButtonClick();
     return this;
   }
 
