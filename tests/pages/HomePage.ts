@@ -155,7 +155,7 @@ export class HomePage {
   //공지사항&이벤트 롤링 확인
   async expectNoticeTrackMoves(): Promise<this> {
     const track = this.page.locator('#noticeTrack');
-    await expect(track, '공지사항 롤링 트랙이 보여야 한다').toBeVisible();
+    await expect(track, '공지사항 롤링 트랙이 노출 되어야야 한다').toBeVisible();
     const before = await track.evaluate((el) => getComputedStyle(el).transform);
     await expect
       .poll(
@@ -171,7 +171,7 @@ export class HomePage {
   }
   async expectEventTrackMoves(): Promise<this> {
     const track = this.page.locator('#noticeEventTrack');
-    await expect(track, '이벤트 롤링 트랙이 보여야 한다').toBeVisible();
+    await expect(track, '이벤트 롤링 트랙이 노출 되어야 한다').toBeVisible();
     const before = await track.evaluate((el) => getComputedStyle(el).transform);
     await expect
       .poll(
@@ -208,8 +208,15 @@ export class HomePage {
     return this;
   }
 
+  //닉네임 필드에서 enter 키 입력력
   async submitSearchWithEnter(): Promise<this> {
     await this.nicknameField.press('Enter');
+    return this;
+  }
+
+  //닉네임 필드에서 조회 버튼 클릭
+  async submitButtonClick(): Promise<this> {
+    await this.searchSubmitButton.click();
     return this;
   }
 
@@ -218,6 +225,12 @@ export class HomePage {
     // console.log(`[HomePage] 랜딩에서 조회(Enter): ${nickname}`);
     await this.fillNickname(nickname);
     await this.submitSearchWithEnter();
+    return this;
+  }
+
+  async searchFromLandingByClick(nickname: string): Promise<this> {
+    await this.fillNickname(nickname);
+    await this.submitButtonClick();
     return this;
   }
 

@@ -32,18 +32,26 @@ export async function openAnyCharacterDetailWithEquipment(
   return null;
 }
 
-/** 랜딩에서 조회해 `character.html`로 진입하는 스모크용 해상 */
+//조회 시 어떤 방식으로 조회할지 선택하는 타입 변수
+type LandingSearchMode = 'enter' | 'click';
+
 export async function openAnyCharacterDetailFromLanding(
   page: Page,
-  candidates: string[]
+  candidates: string[],
+  mode: LandingSearchMode = 'enter'
 ): Promise<string | null> {
   const home = new HomePage(page);
 
   for (const nickname of candidates) {
-    // console.log(`[SmokeLookup] 랜딩→상세 후보 확인: ${nickname}`);
     await home.goto();
     await home.expectAppReady();
-    await home.searchFromLandingByEnter(nickname);
+
+    if (mode === 'enter') {
+      await home.searchFromLandingByEnter(nickname);
+    } else {
+      await home.searchFromLandingByClick(nickname);
+    }
+
     await page.waitForURL(/character(?:_notFound)?\.html\?name=/);
 
     const characterPage = new CharacterPage(page);
@@ -52,9 +60,9 @@ export async function openAnyCharacterDetailFromLanding(
       return nickname;
     }
   }
-
   return null;
 }
+
 
 /** 유니온 페이지에서 기본·아티팩트·챔피언 탭을 모두 검증 가능한 닉네임 해상 */
 export async function openAnyUnionDetailWithTabs(page: Page, candidates: string[]): Promise<string | null> {

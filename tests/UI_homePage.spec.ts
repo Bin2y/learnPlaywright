@@ -2,7 +2,7 @@ import { test } from '@playwright/test';
 import { HomePage } from './pages/HomePage';
 
 
-//waitForResponse 조건 함수
+//waitForResponse 조건 함수 공지사항 API 로딩 완료료
 const isNoticeResponse = (r: import('@playwright/test').Response) => {
     const u = new URL(r.url());
     return (
@@ -12,7 +12,8 @@ const isNoticeResponse = (r: import('@playwright/test').Response) => {
       r.ok()
     );
   };
-  const isEventResponse = (r: import('@playwright/test').Response) => {
+  //waitForResponse 조건 함수 이벤트 API 로딩 완료
+const isEventResponse = (r: import('@playwright/test').Response) => {
     const u = new URL(r.url());
     return (
       r.request().method() === 'GET' &&
