@@ -155,7 +155,7 @@ export class HomePage {
   //공지사항&이벤트 롤링 확인
   async expectNoticeTrackMoves(): Promise<this> {
     const track = this.page.locator('#noticeTrack');
-    await expect(track, '공지사항 롤링 트랙이 보여야 한다').toBeVisible();
+    await expect(track, '공지사항 롤링 트랙이 노출 되어야야 한다').toBeVisible();
     const before = await track.evaluate((el) => getComputedStyle(el).transform);
     await expect
       .poll(
@@ -171,7 +171,7 @@ export class HomePage {
   }
   async expectEventTrackMoves(): Promise<this> {
     const track = this.page.locator('#noticeEventTrack');
-    await expect(track, '이벤트 롤링 트랙이 보여야 한다').toBeVisible();
+    await expect(track, '이벤트 롤링 트랙이 노출 되어야 한다').toBeVisible();
     const before = await track.evaluate((el) => getComputedStyle(el).transform);
     await expect
       .poll(

@@ -61,11 +61,11 @@ export class UnionPage {
     // console.log(`[UnionPage] 로드 검증: ${nickname}`);
     await expect(this.page, '유니온 페이지 URL이어야 한다').toHaveURL(/\/union\.html\?name=/);
     await this.settleLoadingOverlay();
-    await expect(this.characterHeading(nickname), '상단에 닉네임이 포함된 제목이 보여야 한다').toBeVisible();
-    await expect(this.unionTablist, '유니온 탭 리스트가 보여야 한다').toBeVisible();
+    await expect(this.characterHeading(nickname), '상단에 닉네임이 포함된 제목이 노출 되어야 한다').toBeVisible();
+    await expect(this.unionTablist, '유니온 탭 리스트가 노출 되어야 한다').toBeVisible();
     await expect(this.unionInfoTab, '유니온 정보 탭이 선택되어 있어야 한다').toHaveAttribute('aria-selected', 'true');
-    await expect(this.page.getByRole('heading', { name: '유니온 요약' }), '유니온 요약 영역이 보여야 한다').toBeVisible();
-    await expect(this.page.getByRole('heading', { name: '유니온 상세' }), '유니온 상세 영역이 보여야 한다').toBeVisible();
+    await expect(this.page.getByRole('heading', { name: '유니온 요약' }), '유니온 요약 영역이 노출 되어야 한다').toBeVisible();
+    await expect(this.page.getByRole('heading', { name: '유니온 상세' }), '유니온 상세 영역이 노출 되어야 한다').toBeVisible();
     return this;
   }
 
@@ -92,7 +92,7 @@ export class UnionPage {
   async expectArtifactTabReady(): Promise<this> {
     await expect(
       this.page.getByRole('heading', { name: '유니온 아티팩트' }),
-      '유니온 아티팩트 영역이 보여야 한다'
+      '유니온 아티팩트 영역이 노출 되어야 한다'
     ).toBeVisible();
     return this;
   }
@@ -107,7 +107,7 @@ export class UnionPage {
   async expectChampionTabReady(): Promise<this> {
     await expect(
       this.page.getByRole('heading', { name: '유니온 챔피언' }),
-      '유니온 챔피언 영역이 보여야 한다'
+      '유니온 챔피언 영역이 노출 되어야 한다'
     ).toBeVisible();
     return this;
   }

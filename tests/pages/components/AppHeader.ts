@@ -31,29 +31,29 @@ export class AppHeader {
   /** 랜딩 등 유니온 네비가 없는 화면 */
   async expectLandingHeaderVisible(): Promise<this> {
     // console.log('[AppHeader] 랜딩 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
+    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
     return this;
   }
 
   /** 캐릭터 상세 등 유니온 링크가 있는 화면 */
   async expectHeaderVisible(): Promise<this> {
     // console.log('[AppHeader] 공통 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
-    await expect(this.unionLink, '유니온 링크가 보여야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
+    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.unionLink, '유니온 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
     return this;
   }
 
   /** 유니온 페이지 — 상단은 `캐릭터` 링크로 돌아간다. */
   async expectUnionContextHeaderVisible(): Promise<this> {
     // console.log('[AppHeader] 유니온 컨텍스트 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 보여야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 보여야 한다').toBeVisible();
-    await expect(this.characterNavLink, '캐릭터 링크가 보여야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 보여야 한다').toBeVisible();
+    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.characterNavLink, '캐릭터 링크가 노출 되어야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
     return this;
   }
 
