@@ -43,7 +43,7 @@ export class AppHeader {
   }
 
   private async expectLandingNavState(): Promise<void> {
-    await expect(this.characterLink, '홈에서서 캐릭터 링크는 미노출되어야 한다').not.toBeVisible();
+    await expect(this.characterLink, '홈에서 캐릭터 링크는 미노출되어야 한다').not.toBeVisible();
     await expect(this.unionLink, '홈에서 유니온 링크는 미노출되어야 한다').not.toBeVisible();
     await expect(
       this.mainNav.getByText('캐릭터', { exact: true }),
