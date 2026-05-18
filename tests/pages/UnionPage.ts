@@ -70,7 +70,7 @@ export class UnionPage {
   }
 
   async expectHeaderAndBackLinks(nickname: string): Promise<this> {
-    await this.header.expectUnionContextHeaderVisible();
+    await this.header.expectUnionPageHeaderVisible();
     await expect(
       this.page.getByRole('link', { name: '캐릭터', exact: true }),
       '상단 캐릭터 링크가 닉네임 쿼리로 연결되어야 한다'

@@ -15,6 +15,10 @@ export class AppHeader {
     return this.banner.getByRole('link', { name: '홈' });
   }
 
+  private get characterLink() {
+    return this.banner.getByRole('link', { name: '캐릭터' });
+  }
+
   private get unionLink() {
     return this.banner.getByRole('link', { name: '유니온' });
   }
@@ -28,32 +32,100 @@ export class AppHeader {
     return this.banner.getByRole('link', { name: '캐릭터', exact: true });
   }
 
-  /** 랜딩 등 유니온 네비가 없는 화면 */
+  private get mainNav() {
+    return this.banner.getByRole('navigation', { name: '주요 메뉴' });
+  }
+
+  private async expectCommonHeaderVisible(): Promise<void> {
+    await expect(this.brandLink, '브랜드 링크가 노출되어야 한다').toBeVisible();
+    await expect(this.homeLink, '홈 링크가 노출되어야 한다').toBeVisible();
+    await expect(this.themeToggleButton, '테마 토글 버튼이 노출되어야 한다').toBeVisible();
+  }
+
+  private async expectLandingNavState(): Promise<void> {
+    await expect(this.characterLink, '홈에서서 캐릭터 링크는 미노출되어야 한다').not.toBeVisible();
+    await expect(this.unionLink, '홈에서 유니온 링크는 미노출되어야 한다').not.toBeVisible();
+    await expect(
+      this.mainNav.getByText('캐릭터', { exact: true }),
+      '캐릭터 비활성 항목이 노출되어야 한다'
+    ).toBeVisible();
+    await expect(
+      this.mainNav.getByText('유니온', { exact: true }),
+      '유니온 비활성 항목이 노출되어야 한다'
+    ).toBeVisible();
+    await expect(
+      this.mainNav.getByTitle(/캐릭터 조회 후 이용/),
+      '캐릭터·유니온 비활성 안내 title이 노출되어야 한다'
+    ).toHaveCount(2);
+  }
+
+  /** index.html — 조회 전 랜딩 */
   async expectLandingHeaderVisible(): Promise<this> {
-    // console.log('[AppHeader] 랜딩 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
+    await this.expectCommonHeaderVisible();
+    await this.expectLandingNavState();
     return this;
   }
 
-  /** 캐릭터 상세 등 유니온 링크가 있는 화면 */
-  async expectHeaderVisible(): Promise<this> {
-    // console.log('[AppHeader] 공통 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.unionLink, '유니온 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
+  /** character.html — 캐릭터 상세 */
+  async expectCharacterDetailHeaderVisible(): Promise<this> {
+    await this.expectCommonHeaderVisible();
+    await expect(this.unionLink, '유니온 링크가 노출되어야 한다').toBeVisible();
     return this;
   }
 
-  /** 유니온 페이지 — 상단은 `캐릭터` 링크로 돌아간다. */
-  async expectUnionContextHeaderVisible(): Promise<this> {
-    // console.log('[AppHeader] 유니온 컨텍스트 헤더 표시 확인');
-    await expect(this.brandLink, '브랜드 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.homeLink, '홈 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.characterNavLink, '캐릭터 링크가 노출 되어야 한다').toBeVisible();
-    await expect(this.themeToggleButton, '테마 토글 버튼이 노출 되어야 한다').toBeVisible();
+  /** union.html — 유니온 페이지 */
+  async expectUnionPageHeaderVisible(): Promise<this> {
+    await this.expectCommonHeaderVisible();
+    await expect(this.characterNavLink, '캐릭터 링크가 노출되어야 한다').toBeVisible();
+    return this;
+  }
+
+  async clickHomeLink(): Promise<this> {
+    await this.homeLink.click();
+    return this;
+  }
+
+  async clickCharacterLink(): Promise<this> {
+    await this.characterLink.click();
+    return this;
+  }
+
+  async clickUnionLink(): Promise<this> {
+    await this.unionLink.click();
+    return this;
+  }
+
+  async clickHomeLinkAndExpectLandingUrl(): Promise<this> {
+    await Promise.all([
+      this.page.waitForURL(/\/(index\.html)?\/?$/),
+      this.homeLink.click(),
+    ]);
+    await expect(
+      this.page,
+      '홈 링크 클릭 후 홈 페이지 정상 이동 되어야 한다'
+    ).toHaveURL(/\/(index\.html)?\/?$/);
+    return this;
+  }
+
+  async clickUnionLinkAndExpectUnionUrl(nickname: string): Promise<this> {
+    const nameParam = encodeURIComponent(nickname);
+    const urlPattern = new RegExp(`/union\\.html\\?name=${nameParam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`);
+    await Promise.all([this.page.waitForURL(urlPattern), this.unionLink.click()]);
+    await expect(this.page, '유니온 링크 클릭 후 유니온 페이지로 이동되어야 한다').toHaveURL(
+      urlPattern
+    );
+    return this;
+  }
+
+  async clickCharacterLinkAndExpectCharacterUrl(nickname: string): Promise<this> {
+    const nameParam = encodeURIComponent(nickname);
+    const urlPattern = new RegExp(
+      `/character\\.html\\?name=${nameParam.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`
+    );
+    await Promise.all([this.page.waitForURL(urlPattern), this.characterNavLink.click()]);
+    await expect(this.page, '캐릭터 링크 클릭 후 캐릭터 상세 페이지로 이동되어야 한다').toHaveURL(
+      urlPattern
+    );
     return this;
   }
 
@@ -64,5 +136,4 @@ export class AppHeader {
     );
     return this;
   }
-
 }
