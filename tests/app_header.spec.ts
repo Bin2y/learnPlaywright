@@ -25,7 +25,7 @@ async function openAnyCharacterForHeader(
     }
 
     try {
-      await characterPage.header.expectHeaderVisible();
+      await characterPage.header.expectCharacterDetailHeaderVisible();
       return nickname;
     } catch {
       // 다음 후보
@@ -65,7 +65,7 @@ test.describe('@UI 헤더 — 캐릭터 상세', () => {
     const characterPage = new CharacterPage(page);
 
     await test.step('캐릭터 상세 헤더 요소 노출 확인', async () => {
-      await characterPage.header.expectHeaderVisible();
+      await characterPage.header.expectCharacterDetailHeaderVisible();
     });
   });
 
@@ -92,7 +92,7 @@ test.describe('@UI 헤더 — 유니온', () => {
     const unionPage = new UnionPage(page);
 
     await test.step('유니온 컨텍스트 헤더 요소 노출 확인', async () => {
-      await unionPage.header.expectUnionContextHeaderVisible();
+      await unionPage.header.expectUnionPageHeaderVisible();
     });
   });
 });

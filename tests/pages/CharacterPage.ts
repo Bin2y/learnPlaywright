@@ -107,7 +107,7 @@ export class CharacterPage {
 
   async expectHeaderActionsVisible(nickname: string): Promise<this> {
     // console.log('[CharacterPage] 상단 액션 및 링크 검증');
-    await this.header.expectHeaderVisible();
+    await this.header.expectCharacterDetailHeaderVisible();
     await this.header.expectUnionLinkFor(nickname);
     await expect(this.backToSearchLink, '다른 캐릭터 조회 링크가 노출 되어야 한다').toBeVisible();
     await expect(this.backToSearchLink, '다른 캐릭터 조회 링크는 index.html로 연결되어야 한다').toHaveAttribute(
